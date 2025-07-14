@@ -11,21 +11,20 @@ const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
 
 export async function createSession(userId: string) {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const payload: SessionPayload = { userId, expiresAt: expiresAt.toISOString() };
 
-  const payload: SessionPayload = {
-    userId,
-    expiresAt: expiresAt.toISOString(), // Store as string
-  };
+  const session = await new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("7d")
+    .sign(encodedKey);
 
-  const session = await encrypt(payload);
-
-  const cookieStore = cookies();
-  cookieStore.set("session", session, {
+  cookies().set("session", session, {
     httpOnly: true,
     secure: true,
-    expires: expiresAt,
     path: "/",
+    expires: expiresAt,
   });
 }
 

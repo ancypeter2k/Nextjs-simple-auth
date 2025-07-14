@@ -20,10 +20,12 @@ export async function createSession(userId: string) {
 
   const session = await encrypt(payload);
 
-  cookies().set("session", session, {
+  const cookieStore = cookies();
+  cookieStore.set("session", session, {
     httpOnly: true,
     secure: true,
     expires: expiresAt,
+    path: "/",
   });
 }
 

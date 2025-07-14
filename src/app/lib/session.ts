@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 type SessionPayload = {
     userId: string;
-    expiresAt: Date;
+    expiresAt: string;
 }
 
 const secretKey = process.env.SESSION_SECRET;

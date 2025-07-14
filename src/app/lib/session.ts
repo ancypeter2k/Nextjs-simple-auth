@@ -13,9 +13,9 @@ const encodedKey = new TextEncoder().encode(secretKey);
 export async function createSession(userId: string) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-  const payload = {
+  const payload: SessionPayload = {
     userId,
-    expiresAt: expiresAt.toISOString(), // convert to string
+    expiresAt: expiresAt.toISOString(), // Store as string
   };
 
   const session = await encrypt(payload);
@@ -28,7 +28,6 @@ export async function createSession(userId: string) {
     path: "/",
   });
 }
-
 
 export async function deleteSession() {
     cookies().delete("session");
